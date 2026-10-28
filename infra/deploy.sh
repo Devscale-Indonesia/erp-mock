@@ -25,7 +25,7 @@ cd "$ROOT"
 git fetch origin "$BRANCH"
 git checkout "$BRANCH"
 git pull --ff-only origin "$BRANCH"
-npm ci
+npm ci --include=dev   # the build needs devDependencies even with NODE_ENV=production
 npm run build
 npm run db:migrate   # migrations run before the new code starts
 
