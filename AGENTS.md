@@ -59,6 +59,7 @@ There is no automated test suite yet. Say so in your summary and say exactly wha
 - Don't commit, push, or open a PR unless the user asks. Ask first when it's ambiguous.
 - Branches: `main` is production, `staging` is staging. Don't push to either directly unless the user asks.
 - Commit messages: short imperative subject, body explains why. Add the `Co-Authored-By` line the session requires.
+- Pushing to `main` or `staging` deploys that environment through GitHub Actions. Treat a push there as a deploy.
 - Don't run `infra/deploy.sh` or touch `infra/` servers unless the user asks. Deploys change live systems.
 
 ## Docs

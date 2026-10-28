@@ -28,6 +28,7 @@ Do this once on each server. The steps are the same; only the environment name c
    ```bash
    sudo mkdir -p /var/lib/erp/<env> /var/log/caddy
    sudo chown -R $USER /var/lib/erp
+   sudo chown caddy:caddy /var/log/caddy   # Caddy must own its log folder, or it fails to start
    ```
    The database lives outside the repo, so deploys never touch it.
 5. Install the Caddyfile for this server:
@@ -44,6 +45,16 @@ Do this once on each server. The steps are the same; only the environment name c
    pm2 save
    ```
 7. Seed mock data only on staging, once: `DATABASE_URL=/var/lib/erp/staging/app.db npm run db:seed`. Production should start empty unless the team decides otherwise.
+
+## CI/CD
+
+Pushes to `main` and `staging` deploy automatically through GitHub Actions (`.github/workflows/ci.yml`, see [decision 0009](../docs/decision/0009-ci-cd-with-github-actions.md)). Each server has a deploy-only SSH key in `~/.ssh/authorized_keys`, forced to run `infra/deploy.sh <env>`:
+
+```
+command="cd /srv/erp && infra/deploy.sh production",restrict ssh-ed25519 AAAA... erp-github-actions-production
+```
+
+The private key and pinned host key are secrets of the matching GitHub environment (`SSH_PRIVATE_KEY`, `SSH_KNOWN_HOSTS`); `SSH_HOST` and `SSH_USER` are variables. Manual deploys below still work.
 
 ## Deploying
 

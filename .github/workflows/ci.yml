@@ -1,0 +1,64 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main, staging]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      # `npm run e2e` builds the app, so a separate `npm run build` step is not needed.
+      - run: npm run e2e
+      - name: Upload e2e proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: |
+            e2e/report
+            e2e/.results
+          retention-days: 14
+
+  # main deploys production, staging deploys staging. The environment holds the
+  # SSH key (restricted on the server to that environment's deploy script).
+  deploy:
+    if: github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+      url: ${{ github.ref_name == 'main' && 'https://erp.devscale.id' || 'https://erp-staging.devscale.id' }}
+    concurrency:
+      group: deploy-${{ github.ref_name }}
+      cancel-in-progress: false
+    env:
+      SITE_URL: ${{ github.ref_name == 'main' && 'https://erp.devscale.id' || 'https://erp-staging.devscale.id' }}
+    steps:
+      - name: Set up SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      # The server key is forced to run `infra/deploy.sh <env>`, so no command is passed here.
+      - name: Deploy
+        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}"
+      - name: Health check
+        run: curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "$SITE_URL/" -o /dev/null
