@@ -15,6 +15,8 @@ import { Route as ProductsRouteImport } from './routes/products'
 import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as CustomersIndexRouteImport } from './routes/customers.index'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
+import { Route as DebugBrokenRouteImport } from './routes/debug.broken'
+import { Route as DebugErrorsRouteImport } from './routes/debug.errors'
 import { Route as PurchaseOrdersIndexRouteImport } from './routes/purchase-orders.index'
 import { Route as PurchaseOrdersOrderIdRouteImport } from './routes/purchase-orders.$orderId'
 import { Route as PurchaseOrdersNewRouteImport } from './routes/purchase-orders.new'
@@ -50,6 +52,16 @@ const CustomersIndexRoute = CustomersIndexRouteImport.update({
 const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
   id: '/customers/$customerId',
   path: '/customers/$customerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DebugBrokenRoute = DebugBrokenRouteImport.update({
+  id: '/debug/broken',
+  path: '/debug/broken',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DebugErrorsRoute = DebugErrorsRouteImport.update({
+  id: '/debug/errors',
+  path: '/debug/errors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PurchaseOrdersIndexRoute = PurchaseOrdersIndexRouteImport.update({
@@ -89,6 +101,8 @@ export interface FileRoutesByFullPath {
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/debug/broken': typeof DebugBrokenRoute
+  '/debug/errors': typeof DebugErrorsRoute
   '/purchase-orders/$orderId': typeof PurchaseOrdersOrderIdRoute
   '/purchase-orders/new': typeof PurchaseOrdersNewRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -103,6 +117,8 @@ export interface FileRoutesByTo {
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/debug/broken': typeof DebugBrokenRoute
+  '/debug/errors': typeof DebugErrorsRoute
   '/purchase-orders/$orderId': typeof PurchaseOrdersOrderIdRoute
   '/purchase-orders/new': typeof PurchaseOrdersNewRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -118,6 +134,8 @@ export interface FileRoutesById {
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/debug/broken': typeof DebugBrokenRoute
+  '/debug/errors': typeof DebugErrorsRoute
   '/purchase-orders/$orderId': typeof PurchaseOrdersOrderIdRoute
   '/purchase-orders/new': typeof PurchaseOrdersNewRoute
   '/sales-orders/$orderId': typeof SalesOrdersOrderIdRoute
@@ -134,6 +152,8 @@ export interface FileRouteTypes {
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
+    | '/debug/broken'
+    | '/debug/errors'
     | '/purchase-orders/$orderId'
     | '/purchase-orders/new'
     | '/sales-orders/$orderId'
@@ -148,6 +168,8 @@ export interface FileRouteTypes {
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
+    | '/debug/broken'
+    | '/debug/errors'
     | '/purchase-orders/$orderId'
     | '/purchase-orders/new'
     | '/sales-orders/$orderId'
@@ -162,6 +184,8 @@ export interface FileRouteTypes {
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
+    | '/debug/broken'
+    | '/debug/errors'
     | '/purchase-orders/$orderId'
     | '/purchase-orders/new'
     | '/sales-orders/$orderId'
@@ -177,6 +201,8 @@ export interface RootRouteChildren {
   ProductsRoute: typeof ProductsRoute
   VendorsRoute: typeof VendorsRoute
   CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
+  DebugBrokenRoute: typeof DebugBrokenRoute
+  DebugErrorsRoute: typeof DebugErrorsRoute
   PurchaseOrdersOrderIdRoute: typeof PurchaseOrdersOrderIdRoute
   PurchaseOrdersNewRoute: typeof PurchaseOrdersNewRoute
   SalesOrdersOrderIdRoute: typeof SalesOrdersOrderIdRoute
@@ -230,6 +256,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersCustomerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/debug/broken': {
+      id: '/debug/broken'
+      path: '/debug/broken'
+      fullPath: '/debug/broken'
+      preLoaderRoute: typeof DebugBrokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debug/errors': {
+      id: '/debug/errors'
+      path: '/debug/errors'
+      fullPath: '/debug/errors'
+      preLoaderRoute: typeof DebugErrorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/purchase-orders/': {
       id: '/purchase-orders/'
       path: '/purchase-orders'
@@ -281,6 +321,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsRoute: ProductsRoute,
   VendorsRoute: VendorsRoute,
   CustomersCustomerIdRoute: CustomersCustomerIdRoute,
+  DebugBrokenRoute: DebugBrokenRoute,
+  DebugErrorsRoute: DebugErrorsRoute,
   PurchaseOrdersOrderIdRoute: PurchaseOrdersOrderIdRoute,
   PurchaseOrdersNewRoute: PurchaseOrdersNewRoute,
   SalesOrdersOrderIdRoute: SalesOrdersOrderIdRoute,
