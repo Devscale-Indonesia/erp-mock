@@ -18,6 +18,10 @@ case "$ENV" in
 esac
 export DATABASE_URL="/var/lib/erp/$ENV/app.db"
 export NODE_ENV=production
+# Error tracking (decision 0010). Vite bakes these into the browser bundle at build time.
+# The DSN is a public client key and the host is only reachable on our private tailnet.
+export VITE_SENTRY_DSN="https://47d47e04bcbb4c039260ef94e355e89e@ubuntu-wsl.tail9a7b40.ts.net:8443/2"
+export VITE_SENTRY_ENV="$ENV"
 
 mkdir -p "$(dirname "$DATABASE_URL")"
 cd "$ROOT"
