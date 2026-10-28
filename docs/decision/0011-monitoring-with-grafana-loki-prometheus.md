@@ -18,5 +18,5 @@ We had no view of machine health (CPU, RAM, disk) or of app logs across the two 
 ## Consequences
 
 - Install steps live in `infra/README.md`; scripts are `infra/monitoring/install-server.sh` and `install-agent.sh <env>`.
-- Anyone on the tailnet can push to Loki and Prometheus (no auth). Acceptable on a private tailnet; add tailscale ACLs if the tailnet grows.
+- Ports 3100 (Loki) and 9090 (Prometheus) are forwarded as raw TCP, so any tailnet node can write and also query them directly, with no Grafana login. That includes both environments' logs and metrics. Acceptable while the tailnet is just our own devices. Before it grows, add a tailscale ACL that lets only the ERP servers reach `grafana:3100` and `grafana:9090` (the same ACL should keep other nodes to HTTPS 443).
 - Single server, no backups, no alerting yet.

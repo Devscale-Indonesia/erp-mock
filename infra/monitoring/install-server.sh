@@ -15,8 +15,8 @@ sudo apt-get install -y grafana loki prometheus
 sudo install -m 644 server/prometheus-args /etc/default/prometheus
 sudo install -D -m 644 server/loki.yaml /etc/loki/config.yml
 sudo install -d -o loki /var/lib/loki
-sudo install -d /etc/grafana/grafana.ini.d
-sudo install -m 644 server/grafana-overrides.ini /etc/grafana/grafana.ini.d/erp.ini
+sudo install -D -m 644 server/grafana-override.conf /etc/systemd/system/grafana-server.service.d/erp.conf
+sudo systemctl daemon-reload
 sudo install -m 644 grafana/datasources.yaml /etc/grafana/provisioning/datasources/erp.yaml
 sudo install -m 644 grafana/dashboards.yaml /etc/grafana/provisioning/dashboards/erp.yaml
 sudo install -d -o grafana -g grafana /var/lib/grafana/dashboards
