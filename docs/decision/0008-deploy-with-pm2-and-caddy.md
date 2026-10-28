@@ -21,4 +21,4 @@ Docker was removed in [decision 0005](0005-remove-docker.md). We still need to r
 - SQLite allows only one writer, so PM2 runs one instance. Scaling out would need a different database; that would be a new decision.
 - A reload restarts the process, so each deploy has a short downtime. Acceptable for an internal mock app; revisit if users need zero-downtime deploys.
 - Database backups are not automated. Until they are, back up the file manually before risky migrations.
-- Open: production deploys from `main` today. Decide whether production should deploy from a tag instead.
+- Production deploys from `main`; staging deploys from `staging`. Open: decide whether production should deploy from a tag instead.

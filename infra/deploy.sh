@@ -12,13 +12,19 @@ esac
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="erp-$ENV"
+case "$ENV" in
+  production) BRANCH=main ;;
+  staging) BRANCH=staging ;;
+esac
 export DATABASE_URL="/var/lib/erp/$ENV/app.db"
 export NODE_ENV=production
 
 mkdir -p "$(dirname "$DATABASE_URL")"
 cd "$ROOT"
 
-git pull --ff-only
+git fetch origin "$BRANCH"
+git checkout "$BRANCH"
+git pull --ff-only origin "$BRANCH"
 npm ci
 npm run build
 npm run db:migrate   # migrations run before the new code starts
@@ -30,4 +36,4 @@ else
 fi
 pm2 save
 
-echo "deployed $APP from $(git rev-parse --short HEAD)"
+echo "deployed $APP ($BRANCH) from $(git rev-parse --short HEAD)"
