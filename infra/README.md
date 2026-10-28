@@ -64,7 +64,7 @@ On the server, from `/srv/erp`:
 infra/deploy.sh production   # or staging
 ```
 
-The script checks out the environment's branch (`main` for production, `staging` for staging) and pulls it with `--ff-only`, runs `npm ci`, builds, applies migrations, then reloads the PM2 app (or starts it the first time). A reload restarts the single process, so expect a few seconds of downtime per deploy.
+The script checks out the environment's branch (`main` for production, `staging` for staging) and pulls it with `--ff-only`, runs `npm ci`, builds into `dist.next` (the live app keeps serving `dist` meanwhile), applies migrations, swaps `dist.next` into `dist`, then reloads the PM2 app (or starts it the first time). A reload restarts the single process, so expect a few seconds of downtime per deploy.
 
 ## Operating
 
