@@ -1,0 +1,19 @@
+# Production: erp.devscale.id -> erp-production (port 3000).
+# Caddy obtains and renews the TLS certificate automatically.
+erp.devscale.id {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:3000
+
+	log {
+		output file /var/log/caddy/erp.log
+		format json
+	}
+}

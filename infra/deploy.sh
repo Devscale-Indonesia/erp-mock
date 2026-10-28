@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Deploy the app on this server.
+#   infra/deploy.sh production
+#   infra/deploy.sh staging
+set -euo pipefail
+
+ENV="${1:-}"
+case "$ENV" in
+  production|staging) ;;
+  *) echo "usage: infra/deploy.sh production|staging" >&2; exit 1 ;;
+esac
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+APP="erp-$ENV"
+export DATABASE_URL="/var/lib/erp/$ENV/app.db"
+export NODE_ENV=production
+
+mkdir -p "$(dirname "$DATABASE_URL")"
+cd "$ROOT"
+
+git pull --ff-only
+npm ci
+npm run build
+npm run db:migrate   # migrations run before the new code starts
+
+if pm2 describe "$APP" >/dev/null 2>&1; then
+  pm2 reload infra/pm2/ecosystem.config.cjs --only "$APP" --update-env
+else
+  pm2 start infra/pm2/ecosystem.config.cjs --only "$APP"
+fi
+pm2 save
+
+echo "deployed $APP from $(git rev-parse --short HEAD)"

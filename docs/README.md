@@ -17,3 +17,4 @@ Start here:
 - [Architecture rules](rules/architecture.md)
 - [Decision 0001: TanStack Start](decision/0001-use-tanstack-start.md)
 - [Product 0001: ERP mock scope](product/0001-erp-mock-scope.md)
+- [Deployment runbook](../infra/README.md)

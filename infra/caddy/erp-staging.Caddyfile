@@ -1,0 +1,20 @@
+# Staging: erp-staging.devscale.id -> erp-staging (port 3001).
+# Same as production, plus noindex so search engines skip staging.
+erp-staging.devscale.id {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:3001
+
+	log {
+		output file /var/log/caddy/erp-staging.log
+		format json
+	}
+}
