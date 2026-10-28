@@ -64,6 +64,8 @@ On the server, from `/srv/erp`:
 infra/deploy.sh production   # or staging
 ```
 
+Error tracking ([decision 0010](../docs/decision/0010-error-tracking-with-glitchtip.md)) is built into the browser bundle. Before the first deploy, create `.env.production` in the checkout (gitignored) with `VITE_SENTRY_DSN=<project DSN>` and `VITE_SENTRY_ENV=<env>`. Without it the build works but sends no errors.
+
 The script checks out the environment's branch (`main` for production, `staging` for staging) and pulls it with `--ff-only`, runs `npm ci`, builds into `dist.next` (the live app keeps serving `dist` meanwhile), applies migrations, swaps `dist.next` into `dist`, then reloads the PM2 app (or starts it the first time). A reload restarts the single process, so expect a few seconds of downtime per deploy.
 
 ## Operating
