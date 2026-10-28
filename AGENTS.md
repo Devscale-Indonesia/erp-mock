@@ -49,7 +49,7 @@ Before saying a change is done, run and report:
 
 - `npm run typecheck`
 - `npm run build`
-- For UI changes: `npm run dev` and open the affected pages. Check at least one wide and one short viewport.
+- For UI changes: run `npm run e2e` and add a Playwright spec under `e2e/` covering the change. Also check the affected pages in `npm run dev` at one wide and one short viewport.
 - For server changes: call the function through the running app, or describe why you couldn't.
 
 There is no automated test suite yet. Say so in your summary and say exactly what you checked. Don't claim something works if you didn't run it.

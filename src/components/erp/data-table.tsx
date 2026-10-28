@@ -71,15 +71,6 @@ export function DataTable<TData>({
     return () => observer.disconnect()
   }, [isMobile, data.length])
 
-  // Re-measure after each render: the first row height is only known once rows are drawn.
-  useLayoutEffect(() => {
-    const box = boxRef.current
-    if (!box || isMobile) return
-    const headHeight = box.querySelector<HTMLElement>('thead')?.offsetHeight || FALLBACK_HEADER_HEIGHT
-    const rowHeight = box.querySelector<HTMLElement>('tbody tr')?.offsetHeight || FALLBACK_ROW_HEIGHT
-    const rows = Math.max(3, Math.floor((box.clientHeight - headHeight) / rowHeight))
-    setFitRows((current) => (current === rows ? current : rows))
-  })
 
   const pageSize = isMobile ? MOBILE_PAGE_SIZE : (fitRows ?? 10)
   useEffect(() => {

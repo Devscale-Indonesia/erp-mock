@@ -29,6 +29,14 @@ Scripts:
 - `npm run db:migrate`: apply pending migrations
 - `npm run db:seed -- --force`: wipe the ERP tables and reseed
 - `npm run db:studio`: open Drizzle Studio
+- `npm run e2e`: Playwright tests against a production build with its own database (see below)
+- `npm run e2e:report`: open the last HTML report
+
+## End-to-end tests and PR proof
+
+One-time setup: `npx playwright install chromium`.
+
+`npm run e2e` builds the app, resets `data/e2e.db`, serves it on port 3100, and runs `e2e/*.spec.ts`. Each test keeps a screenshot per step, plus a video and a trace. Results go to `e2e/report` (HTML, open with `npm run e2e:report`) and `e2e/.results`. Both are git-ignored: attach them to the PR instead of committing them.
 
 ## Layout
 

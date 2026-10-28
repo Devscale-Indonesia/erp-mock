@@ -11,3 +11,7 @@ data/*
 !data/.gitkeep
 *.db
 *.db-*
+
+# Playwright e2e output (proof for PRs is attached from here, not committed)
+e2e/.results
+e2e/report
