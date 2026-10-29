@@ -1,6 +1,6 @@
 # 0013: MCP server inside the app
 
-- Status: Accepted
+- Status: Accepted. The auth rule (off unless a token is set) is superseded by [0015](0015-mcp-open-by-default.md).
 - Date: 2026-10-29
 
 ## Context

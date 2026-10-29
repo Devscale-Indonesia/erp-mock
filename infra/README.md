@@ -89,7 +89,7 @@ To update the server after changing these files, copy `infra/monitoring` to the 
 
 ## MCP
 
-The app serves MCP at `/api/mcp` (the `/mcp` page explains how to connect) ([decision 0013](../docs/decision/0013-mcp-server-in-the-app.md)). It is off until `MCP_AUTH_TOKEN` is set. Put it in `/var/lib/erp/<env>/secrets.env` (`MCP_AUTH_TOKEN=...`, readable only by the deploy user); `deploy.sh` loads that file before it reloads PM2. Use a different token per environment.
+The app serves MCP at `/api/mcp` (the `/mcp` page explains how to connect). It is open: no token needed ([decision 0015](../docs/decision/0015-mcp-open-by-default.md)). Only expose it on a private network. To lock it, set `MCP_AUTH_TOKEN` in `/var/lib/erp/<env>/secrets.env` (`deploy.sh` loads that file before it reloads PM2); clients then send it as a Bearer token.
 
 ## Rules
 

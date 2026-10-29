@@ -52,15 +52,13 @@ function McpPage() {
   useEffect(() => setOrigin(window.location.origin), [])
   const url = `${origin}/api/mcp`
 
-  const claudeCode = `claude mcp add --transport http erp ${url} \\
-  --header "Authorization: Bearer your-secret"`
+  const claudeCode = `claude mcp add --transport http erp ${url}`
 
   const config = `{
   "mcpServers": {
     "erp": {
       "type": "http",
-      "url": "${url}",
-      "headers": { "Authorization": "Bearer your-secret" }
+      "url": "${url}"
     }
   }
 }`
@@ -74,28 +72,9 @@ function McpPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>1. Turn it on</CardTitle>
+          <CardTitle>1. Connect</CardTitle>
           <CardDescription>
-            The server is off until it has a secret. Pick a long random string, set it as MCP_AUTH_TOKEN, and start the app.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <Code>{'MCP_AUTH_TOKEN=your-secret npm run dev'}</Code>
-          <Alert>
-            <TriangleAlert />
-            <AlertTitle>Keep the secret private</AlertTitle>
-            <AlertDescription>
-              This app has no login. Anyone with the secret can create orders and records.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>2. Connect</CardTitle>
-          <CardDescription>
-            The server address is <code className="font-mono text-foreground">{url}</code>. Use the same secret as above.
+            The server address is <code className="font-mono text-foreground">{url}</code>. There is nothing to set up: no login, no token.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
@@ -103,12 +82,19 @@ function McpPage() {
           <Code>{claudeCode}</Code>
           <p className="text-sm font-medium">Any other app that reads an MCP config file</p>
           <Code>{config}</Code>
+          <Alert>
+            <TriangleAlert />
+            <AlertTitle>Anyone who can reach this app can use these tools</AlertTitle>
+            <AlertDescription>
+              That includes creating orders and records. To lock it, start the app with MCP_AUTH_TOKEN set, and clients must send that value as a Bearer token.
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>3. Try it</CardTitle>
+          <CardTitle>2. Try it</CardTitle>
           <CardDescription>Ask in plain English. The assistant picks the right tool.</CardDescription>
         </CardHeader>
         <CardContent>
