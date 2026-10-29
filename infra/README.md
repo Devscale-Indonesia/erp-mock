@@ -78,6 +78,21 @@ sudo tail -f /var/log/caddy/erp.log   # request log (JSON)
 sudo caddy validate --config /etc/caddy/Caddyfile
 ```
 
+## Monitoring
+
+Grafana, Prometheus and Loki run on the `grafana` tailnet host ([decision 0011](../docs/decision/0011-monitoring-with-grafana-loki-prometheus.md)). Open `https://grafana.tail9a7b40.ts.net` and pick the **ERP machine monitor** dashboard, then Staging or Production in the Environment selector. The admin password is in `~/grafana-admin-password` on the `grafana` host.
+
+```
+infra/monitoring/
+  install-server.sh     install and configure the stack on the grafana host
+  install-agent.sh      install Alloy on an ERP server: install-agent.sh staging|production
+  server/               Loki, Prometheus and Grafana settings
+  agent/config.alloy    Alloy config (metrics and logs, labelled env and host)
+  grafana/              datasource, dashboard provider and dashboard JSON
+```
+
+To update the server after changing these files, copy `infra/monitoring` to the host and rerun `install-server.sh` (it is safe to repeat). On each ERP server, run `infra/monitoring/install-agent.sh <env>` from `/srv/erp` once.
+
 ## Rules
 
 - Never run two app processes against one SQLite file. `instances` is `1` on purpose.
