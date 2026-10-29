@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { and, count, desc, eq, ne, sql, sum } from 'drizzle-orm'
+import { count, desc, eq, ne, sql, sum } from 'drizzle-orm'
 import { db } from '@/db'
 import { customers, employees, products, salesOrderItems, salesOrders } from '@/db/schema'
 
@@ -48,6 +48,10 @@ export const getDashboard = createServerFn({ method: 'GET' }).handler(async () =
     .all()
 
   // Units sold per product, ignoring cancelled orders. Feeds the dashboard product table.
+  // The CASE skips quantities on cancelled orders; a filter in the JOIN condition
+  // cannot do this because the raw item quantity would still be summed.
+  // Products with no sales sum to NULL, converted to 0 below.
+  const nonCancelledUnits = sql<number | null>`case when ${salesOrders.status} <> 'cancelled' then ${salesOrderItems.quantity} end`
   const topProducts = db
     .select({
       id: products.id,
@@ -56,16 +60,13 @@ export const getDashboard = createServerFn({ method: 'GET' }).handler(async () =
       category: products.category,
       unitPrice: products.unitPrice,
       stock: products.stock,
-      sold: sum(salesOrderItems.quantity),
+      sold: sum(nonCancelledUnits),
     })
     .from(products)
     .leftJoin(salesOrderItems, eq(salesOrderItems.productId, products.id))
-    .leftJoin(
-      salesOrders,
-      and(eq(salesOrders.id, salesOrderItems.orderId), ne(salesOrders.status, 'cancelled')),
-    )
+    .leftJoin(salesOrders, eq(salesOrders.id, salesOrderItems.orderId))
     .groupBy(products.id)
-    .orderBy(desc(sum(salesOrderItems.quantity)), products.name)
+    .orderBy(desc(sum(nonCancelledUnits)), products.name)
     .limit(8)
     .all()
     .map((row) => ({ ...row, sold: Number(row.sold ?? 0) }))
