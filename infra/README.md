@@ -46,15 +46,9 @@ Do this once on each server. The steps are the same; only the environment name c
    ```
 7. Seed mock data only on staging, once: `DATABASE_URL=/var/lib/erp/staging/app.db npm run db:seed`. Production should start empty unless the team decides otherwise.
 
-## CI/CD
+## CI
 
-Pushes to `main` and `staging` deploy automatically through GitHub Actions (`.github/workflows/ci.yml`, see [decision 0009](../docs/decision/0009-ci-cd-with-github-actions.md)). Each server has a deploy-only SSH key in `~/.ssh/authorized_keys`, forced to run `infra/deploy.sh <env>`:
-
-```
-command="cd /srv/erp && infra/deploy.sh production",restrict ssh-ed25519 AAAA... erp-github-actions-production
-```
-
-The private key and pinned host key are secrets of the matching GitHub environment (`SSH_PRIVATE_KEY`, `SSH_KNOWN_HOSTS`); `SSH_HOST` and `SSH_USER` are variables. Manual deploys below still work.
+GitHub Actions (`.github/workflows/ci.yml`) runs typecheck and e2e on pull requests and on pushes to `main` and `staging`. It does not deploy: automated deploys were removed ([decision 0012](../docs/decision/0012-remove-automated-deploys.md)). Deploy by hand as below.
 
 ## Deploying
 
