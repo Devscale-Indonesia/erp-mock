@@ -18,6 +18,7 @@ A mock ERP for demos and teaching. It shows how a small business runs sales, sto
 | Vendors | `/vendors` | Suppliers and their payment terms |
 | Purchase orders | `/purchase-orders`, `/new`, `/:id` | Buying stock from vendors. See [0004](0004-procurement.md) |
 | Employees | `/employees` | Staff directory |
+| MCP | `/mcp` | How to connect an AI assistant to the ERP. Documentation only; the server is `/api/mcp` |
 
 ## Out of scope
 

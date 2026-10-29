@@ -14,6 +14,7 @@ import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as VendorsRouteImport } from './routes/vendors'
+import { Route as ApiMcpRouteImport } from './routes/api.mcp'
 import { Route as CustomersIndexRouteImport } from './routes/customers.index'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 import { Route as DebugBrokenRouteImport } from './routes/debug.broken'
@@ -48,6 +49,11 @@ const ProductsRoute = ProductsRouteImport.update({
 const VendorsRoute = VendorsRouteImport.update({
   id: '/vendors',
   path: '/vendors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMcpRoute = ApiMcpRouteImport.update({
+  id: '/api/mcp',
+  path: '/api/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersIndexRoute = CustomersIndexRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/debug/broken': typeof DebugBrokenRoute
   '/debug/errors': typeof DebugErrorsRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/debug/broken': typeof DebugBrokenRoute
   '/debug/errors': typeof DebugErrorsRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
+  '/api/mcp': typeof ApiMcpRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/debug/broken': typeof DebugBrokenRoute
   '/debug/errors': typeof DebugErrorsRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/products'
     | '/vendors'
+    | '/api/mcp'
     | '/customers/$customerId'
     | '/debug/broken'
     | '/debug/errors'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/products'
     | '/vendors'
+    | '/api/mcp'
     | '/customers/$customerId'
     | '/debug/broken'
     | '/debug/errors'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/products'
     | '/vendors'
+    | '/api/mcp'
     | '/customers/$customerId'
     | '/debug/broken'
     | '/debug/errors'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   ProductsRoute: typeof ProductsRoute
   VendorsRoute: typeof VendorsRoute
+  ApiMcpRoute: typeof ApiMcpRoute
   CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
   DebugBrokenRoute: typeof DebugBrokenRoute
   DebugErrorsRoute: typeof DebugErrorsRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/vendors'
       fullPath: '/vendors'
       preLoaderRoute: typeof VendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mcp': {
+      id: '/api/mcp'
+      path: '/api/mcp'
+      fullPath: '/api/mcp'
+      preLoaderRoute: typeof ApiMcpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers/': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   ProductsRoute: ProductsRoute,
   VendorsRoute: VendorsRoute,
+  ApiMcpRoute: ApiMcpRoute,
   CustomersCustomerIdRoute: CustomersCustomerIdRoute,
   DebugBrokenRoute: DebugBrokenRoute,
   DebugErrorsRoute: DebugErrorsRoute,

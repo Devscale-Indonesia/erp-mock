@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { timingSafeEqual } from 'node:crypto'
 import { createMcpServer } from '@/modules/mcp/tools'
 
-// MCP over HTTP at /mcp. The tools call the same server functions as the pages.
+// MCP over HTTP at /api/mcp. (The /mcp page explains how to connect.) The tools call the same server functions as the pages.
 // Off unless MCP_AUTH_TOKEN is set; callers send `Authorization: Bearer <token>`.
 const handler = createMcpHandler(() => createMcpServer())
 
@@ -15,7 +15,7 @@ function authorized(request: Request) {
   return given.length === want.length && timingSafeEqual(given, want)
 }
 
-export const Route = createFileRoute('/mcp')({
+export const Route = createFileRoute('/api/mcp')({
   server: {
     handlers: {
       ANY: ({ request }) => {

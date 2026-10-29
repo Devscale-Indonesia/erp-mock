@@ -3,6 +3,7 @@ import {
   IdCard,
   LayoutDashboard,
   Package,
+  Plug,
   ShoppingCart,
   Truck,
   Users,
@@ -19,6 +20,7 @@ export const navItems: NavItem[] = [
   { to: '/vendors', label: 'Vendors', icon: Truck, group: 'Procurement' },
   { to: '/purchase-orders', label: 'Purchase orders', icon: ClipboardList, group: 'Procurement' },
   { to: '/employees', label: 'Employees', icon: IdCard, group: 'Other' },
+  { to: '/mcp', label: 'MCP', icon: Plug, group: 'Other' },
 ]
 
 export const navGroups = [...new Set(navItems.map((item) => item.group))]
