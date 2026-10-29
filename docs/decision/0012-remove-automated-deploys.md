@@ -1,6 +1,6 @@
 # 0012: Remove automated deploys from CI
 
-- Status: Accepted
+- Status: Accepted. The `staging` branch it mentions was removed by [0014](0014-single-branch-main.md).
 - Date: 2026-10-29
 
 ## Context

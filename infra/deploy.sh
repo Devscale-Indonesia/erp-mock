@@ -14,7 +14,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="erp-$ENV"
 case "$ENV" in
   production) BRANCH=main ;;
-  staging) BRANCH=staging ;;
+  staging) BRANCH=main ;; # there is no staging branch; a staging server runs main too
 esac
 export DATABASE_URL="/var/lib/erp/$ENV/app.db"
 export NODE_ENV=production

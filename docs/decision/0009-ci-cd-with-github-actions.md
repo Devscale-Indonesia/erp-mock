@@ -1,6 +1,6 @@
 # 0009: CI/CD with GitHub Actions and per-environment SSH keys
 
-- Status: Superseded in part by [0012](0012-remove-automated-deploys.md) (the `deploy` job and per-environment SSH keys; the `check` job still applies)
+- Status: Superseded in part by [0012](0012-remove-automated-deploys.md) and [0014](0014-single-branch-main.md) (one branch) (the `deploy` job and per-environment SSH keys; the `check` job still applies)
 - Date: 2026-10-28
 
 ## Context

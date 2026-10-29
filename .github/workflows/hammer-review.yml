@@ -2,7 +2,7 @@ name: Hammer Review
 
 on:
   pull_request:
-    branches: [staging]   # review PRs into staging only; staging -> main is not reviewed
+    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
