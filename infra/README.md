@@ -87,6 +87,10 @@ infra/monitoring/
 
 To update the server after changing these files, copy `infra/monitoring` to the host and rerun `install-server.sh` (it is safe to repeat). On each ERP server, run `infra/monitoring/install-agent.sh <env>` from `/srv/erp` once.
 
+## MCP
+
+The app serves MCP at `/mcp` ([decision 0013](../docs/decision/0013-mcp-server-in-the-app.md)). It is off until `MCP_AUTH_TOKEN` is set. Put it in `/var/lib/erp/<env>/secrets.env` (`MCP_AUTH_TOKEN=...`, readable only by the deploy user); `deploy.sh` loads that file before it reloads PM2. Use a different token per environment.
+
 ## Rules
 
 - Never run two app processes against one SQLite file. `instances` is `1` on purpose.
