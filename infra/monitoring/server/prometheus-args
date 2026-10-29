@@ -1,0 +1,2 @@
+# Installed as /etc/default/prometheus. Localhost only; remote write lets the ERP agents push metrics.
+ARGS="--web.listen-address=127.0.0.1:9090 --web.enable-remote-write-receiver --storage.tsdb.retention.time=30d"

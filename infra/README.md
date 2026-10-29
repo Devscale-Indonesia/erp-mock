@@ -58,6 +58,8 @@ On the server, from `/srv/erp`:
 infra/deploy.sh production   # or staging
 ```
 
+Error tracking ([decision 0010](../docs/decision/0010-error-tracking-with-glitchtip.md)) is built into the browser bundle. `deploy.sh` sets `VITE_SENTRY_DSN` and `VITE_SENTRY_ENV` for the build, so no server setup is needed. To use another DSN, change it in `deploy.sh`.
+
 The script checks out the environment's branch (`main` for production, `staging` for staging) and pulls it with `--ff-only`, runs `npm ci`, builds into `dist.next` (the live app keeps serving `dist` meanwhile), applies migrations, swaps `dist.next` into `dist`, then reloads the PM2 app (or starts it the first time). A reload restarts the single process, so expect a few seconds of downtime per deploy.
 
 ## Operating
@@ -69,6 +71,21 @@ pm2 restart erp-staging      # restart without a new build
 sudo tail -f /var/log/caddy/erp.log   # request log (JSON)
 sudo caddy validate --config /etc/caddy/Caddyfile
 ```
+
+## Monitoring
+
+Grafana, Prometheus and Loki run on the `grafana` tailnet host ([decision 0011](../docs/decision/0011-monitoring-with-grafana-loki-prometheus.md)). Open `https://grafana.tail9a7b40.ts.net` and pick the **ERP machine monitor** dashboard, then Staging or Production in the Environment selector. The admin password is in `~/grafana-admin-password` on the `grafana` host.
+
+```
+infra/monitoring/
+  install-server.sh     install and configure the stack on the grafana host
+  install-agent.sh      install Alloy on an ERP server: install-agent.sh staging|production
+  server/               Loki, Prometheus and Grafana settings
+  agent/config.alloy    Alloy config (metrics and logs, labelled env and host)
+  grafana/              datasource, dashboard provider and dashboard JSON
+```
+
+To update the server after changing these files, copy `infra/monitoring` to the host and rerun `install-server.sh` (it is safe to repeat). On each ERP server, run `infra/monitoring/install-agent.sh <env>` from `/srv/erp` once.
 
 ## MCP
 

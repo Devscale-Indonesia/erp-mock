@@ -1,0 +1,43 @@
+// Grafana Alloy on each ERP server. Opens no ports: it pushes to the monitoring server over the tailnet.
+// /etc/default/alloy sets ENV (staging|production) and PM2_LOG_DIR.
+// Every metric and log line carries env, so one dashboard variable filters both.
+
+prometheus.exporter.unix "node" {}
+
+prometheus.scrape "node" {
+  targets         = prometheus.exporter.unix.node.targets
+  forward_to      = [prometheus.remote_write.grafana.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.remote_write "grafana" {
+  external_labels = {
+    env  = sys.env("ENV"),
+    host = constants.hostname,
+  }
+  endpoint {
+    url = "http://grafana:9090/api/v1/write"
+  }
+}
+
+local.file_match "logs" {
+  path_targets = [
+    {__path__ = sys.env("PM2_LOG_DIR") + "/*.log", job = "pm2"},
+    {__path__ = "/var/log/caddy/*.log", job = "caddy"},
+  ]
+}
+
+loki.source.file "logs" {
+  targets    = local.file_match.logs.targets
+  forward_to = [loki.write.grafana.receiver]
+}
+
+loki.write "grafana" {
+  external_labels = {
+    env  = sys.env("ENV"),
+    host = constants.hostname,
+  }
+  endpoint {
+    url = "http://grafana:3100/loki/api/v1/push"
+  }
+}
