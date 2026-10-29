@@ -87,6 +87,13 @@ export const createPurchaseOrder = createServerFn({ method: 'POST' })
         lines.set(productId, { quantity: (current?.quantity ?? 0) + quantity, unitCost })
       }
 
+      // Only products supplied by the chosen vendor can be added.
+      for (const productId of lines.keys()) {
+        const product = tx.select().from(products).where(eq(products.id, productId)).get()
+        if (!product) throw new Error(`Product ${productId} not found`)
+        if (product.vendorId !== vendorId) throw new Error(`${product.name} is not supplied by ${vendor.name}`)
+      }
+
       const total = [...lines.values()].reduce((acc, l) => acc + l.quantity * l.unitCost, 0)
       const order = tx
         .insert(purchaseOrders)
