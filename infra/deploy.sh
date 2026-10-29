@@ -18,6 +18,8 @@ case "$ENV" in
 esac
 export DATABASE_URL="/var/lib/erp/$ENV/app.db"
 export NODE_ENV=production
+# Secrets kept outside the repo (e.g. MCP_AUTH_TOKEN, decision 0013). Optional.
+if [ -f "/var/lib/erp/$ENV/secrets.env" ]; then set -a; . "/var/lib/erp/$ENV/secrets.env"; set +a; fi
 
 mkdir -p "$(dirname "$DATABASE_URL")"
 cd "$ROOT"

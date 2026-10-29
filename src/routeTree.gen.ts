@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmployeesRouteImport } from './routes/employees'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as CustomersIndexRouteImport } from './routes/customers.index'
@@ -32,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
 const EmployeesRoute = EmployeesRouteImport.update({
   id: '/employees',
   path: '/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -98,6 +104,7 @@ const SalesOrdersNewRoute = SalesOrdersNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/employees': typeof EmployeesRoute
+  '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/employees': typeof EmployeesRoute
+  '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/employees': typeof EmployeesRoute
+  '/mcp': typeof McpRoute
   '/products': typeof ProductsRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/employees'
+    | '/mcp'
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/employees'
+    | '/mcp'
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/employees'
+    | '/mcp'
     | '/products'
     | '/vendors'
     | '/customers/$customerId'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EmployeesRoute: typeof EmployeesRoute
+  McpRoute: typeof McpRoute
   ProductsRoute: typeof ProductsRoute
   VendorsRoute: typeof VendorsRoute
   CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/employees'
       fullPath: '/employees'
       preLoaderRoute: typeof EmployeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -318,6 +338,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EmployeesRoute: EmployeesRoute,
+  McpRoute: McpRoute,
   ProductsRoute: ProductsRoute,
   VendorsRoute: VendorsRoute,
   CustomersCustomerIdRoute: CustomersCustomerIdRoute,
